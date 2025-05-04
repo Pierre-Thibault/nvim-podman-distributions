@@ -47,7 +47,6 @@ else
 fi
 
 # Run a temporary container with volume mapping
-echo "$FILE_OR_DIR_TO_OPEN"
 podman run \
 	-it \
 	--rm \
