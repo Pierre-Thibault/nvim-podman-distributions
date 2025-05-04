@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# Init
+IMAGE_NAME="nvim-astrovim"
+NVIM_CONFIG_DIR="$HOME/.config/podman/$IMAGE_NAME/nvim-config"
+LOCAL_DIR="$HOME/.config/podman/$IMAGE_NAME/local"
+CACHE_DIR="$HOME/.config/podman/$IMAGE_NAME/cache"
+FILE_OR_DIR_TO_OPEN="${1:-$PWD}"
+HOST_MAPPED_DIR="/root/Project"
+
+# Create the image (if needed)
+if ! podman image inspect "$IMAGE_NAME" > /dev/null 2>&1; then
+		echo "*****************************************************"
+		echo "*                  CREATING IMAGE                   *"
+		echo "*****************************************************"
+		echo
+		
+		# Get the script directory
+		SOURCE=${BASH_SOURCE[0]}
+		while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+		  DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+		  SOURCE=$(readlink "$SOURCE")
+		  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+		done
+		SCRIPT_DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+    podman build -t $IMAGE_NAME $SCRIPT_DIR
+fi
+
+# Make the host Neovim working directories (if not already there)
+mkdir -p $NVIM_CONFIG_DIR
+mkdir -p $LOCAL_DIR
+mkdir -p $CACHE_DIR
+
+# Clone the distribution locally on the host (if not already done)
+if [ "$(find $NVIM_CONFIG_DIR -maxdepth 0 -empty)" ]; then
+	git clone --depth 1 https://github.com/AstroNvim/template $NVIM_CONFIG_DIR
+fi
+
+# Get the working directory (we are going to map this directory as a volume to $HOST_MAPPED_DIR)
+if [ -d "$FILE_OR_DIR_TO_OPEN" ]; then
+	WORKING_DIR="$FILE_OR_DIR_TO_OPEN"
+	FILE_OR_DIR_TO_OPEN=$HOST_MAPPED_DIR
+else
+	WORKING_DIR="$( dirname "$FILE_OR_DIR_TO_OPEN" )"
+	FILE_OR_DIR_TO_OPEN="$HOST_MAPPED_DIR/$( basename "$FILE_OR_DIR_TO_OPEN" )"
+fi
+
+# Run a temporary container with volume mapping
+echo "$FILE_OR_DIR_TO_OPEN"
+podman run \
+	-it \
+	--rm \
+	--label $IMAGE_NAME \
+	-v $NVIM_CONFIG_DIR:/root/.config/nvim \
+	-v $LOCAL_DIR:/root/.local \
+	-v $CACHE_DIR:/root/.cache \
+	-v $WORKING_DIR:$HOST_MAPPED_DIR \
+	$IMAGE_NAME \
+	"$FILE_OR_DIR_TO_OPEN"
+	
