@@ -14,10 +14,6 @@ RUN curl -L https://github.com/dundee/gdu/releases/latest/download/gdu_linux_amd
 
 RUN npm install tree-sitter-cli
 
-# Clone AstroNvim starter configuration into ~/.config/nvim
-RUN git clone --depth 1 https://github.com/AstroNvim/template ~/.config/nvim
-RUN rm -rf ~/.config/nvim/.git
-
 # Create the directory for the pointing point of the host
 RUN mkdir /home/Project
 

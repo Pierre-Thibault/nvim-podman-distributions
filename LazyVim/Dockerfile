@@ -8,9 +8,6 @@ WORKDIR /root
 RUN apk update && \
     apk add --no-cache git nodejs neovim ripgrep build-base wget lazygit curl fzf ripgrep fd
 
-# Clone LazyVim starter configuration into ~/.config/nvim
-RUN git clone https://github.com/LazyVim/starter ~/.config/nvim
-
 # Set the entrypoint to run Neovim
 ENTRYPOINT ["nvim"]
 
