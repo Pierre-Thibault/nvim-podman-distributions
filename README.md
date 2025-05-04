@@ -3,6 +3,9 @@
 
 # nvim-podman-distributions
 
+![image](https://github.com/user-attachments/assets/bb4fc0fe-5fd3-431f-9ad5-de65f207889d)
+
+
 Ready to use scripts to start using a Neovim distribution using a Docker container.
 
 ## Description
