@@ -35,6 +35,16 @@ mkdir -p $CACHE_DIR
 # Clone the distribution locally on the host (if not already done)
 if [ "$(find $NVIM_CONFIG_DIR -maxdepth 0 -empty)" ]; then
 	git clone https://github.com/NvChad/starter $NVIM_CONFIG_DIR
+
+	# MasonInstallAll
+	podman run \
+		--rm \
+		--label $IMAGE_NAME \
+		-v $NVIM_CONFIG_DIR:/root/.config/nvim \
+		-v $LOCAL_DIR:/root/.local \
+		-v $CACHE_DIR:/root/.cache \
+		$IMAGE_NAME \
+		--headless -c 'Lazy sync' -c 'MasonInstallAll' -c 'qall'
 fi
 
 # Get the working directory (we are going to map this directory as a volume to $HOST_MAPPED_DIR)
@@ -47,7 +57,6 @@ else
 fi
 
 # Run a temporary container with volume mapping
-echo "$FILE_OR_DIR_TO_OPEN"
 podman run \
 	-it \
 	--rm \
