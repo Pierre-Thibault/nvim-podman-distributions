@@ -2,9 +2,9 @@
 
 # Init
 IMAGE_NAME="nvim-lazyvim"
-NVIM_CONFIG_DIR="$HOME/.config/podman/$IMAGE_NAME/nvim-config"
-LOCAL_DIR="$HOME/.config/podman/$IMAGE_NAME/local"
-CACHE_DIR="$HOME/.config/podman/$IMAGE_NAME/cache"
+NVIM_CONFIG_DIR="$HOME/.config/pt-nvim-podman-distributions/$IMAGE_NAME/nvim-config"
+LOCAL_DIR="$HOME/.config/pt-nvim-podman-distributions/$IMAGE_NAME/local"
+CACHE_DIR="$HOME/.config/pt-nvim-podman-distributions/$IMAGE_NAME/cache"
 FILE_OR_DIR_TO_OPEN="${1:-$PWD}"
 HOST_MAPPED_DIR="/root/Project"
 
