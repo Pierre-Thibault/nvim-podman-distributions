@@ -1,16 +1,18 @@
-# Use alpine:latest as the base image
-FROM alpine:latest
+# Use the official NixOS base image
+FROM nixos/nix:latest
 
-# Set working directory to /root
-WORKDIR /root
+# Set up Nix environment
+RUN nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs && \
+    nix-channel --update
 
-# Update package index and install required packages
-RUN apk update && \
-    apk add --no-cache git nodejs neovim ripgrep build-base wget lua-language-server
+# Install Neovim (unstable) using nix-env
+RUN nix-env -iA nixpkgs.gcc
+RUN nix-env -iA nixpkgs.git
+RUN nix-env -iA nixpkgs.gnumake
+RUN nix-env -iA nixpkgs.neovim
+RUN nix-env -iA nixpkgs.nodejs_23
+RUN nix-env -iA nixpkgs.ripgrep
+RUN nix-env -iA nixpkgs.wget
 
-# Clone NvChad starter configuration into ~/.config/nvim
-RUN git clone https://github.com/NvChad/starter ~/.config/nvim
-
-# Set the entrypoint to run Neovim
+# Set the entrypoint to Neovim
 ENTRYPOINT ["nvim"]
-

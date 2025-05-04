@@ -63,10 +63,6 @@ On the host `$HOME/.config/pt-nvim-podman-distributions`, the Neovim state will 
 
 The first start will take a few minutes or the time to create the image and to download all the requirements. Subsequent starts are very fast because there is only a container to create.
 
-#### Notes
-
-NvChad gives some errors. It is recommended to first [configure LSPs](https://nvchad.com/docs/config/lsp) before starting working on language files.
-
 ## How to uninstall
 
 1. Delete the corresponding Docker image `
