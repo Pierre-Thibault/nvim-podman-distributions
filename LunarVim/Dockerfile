@@ -1,5 +1,5 @@
 # Use alpine:latest as the base image
-FROM alpine:edge
+FROM alpine:latest
 
 # Set working directory to /root
 WORKDIR /root
